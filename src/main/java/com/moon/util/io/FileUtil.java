@@ -48,4 +48,52 @@ public class FileUtil {
         }
         return sbf.toString();
     }
+
+    /**
+     * 通过覆盖的方式写文件内容
+     * @param content 内容
+     * @param filePathName 文件路径名称
+     * @return 返回实际写的字符个数
+     */
+    public static void writeFileContentByCover(String content,String filePathName)throws Exception{
+        PrintStream stream = null;
+        try {
+            stream = new PrintStream(filePathName);//写入的文件path
+            stream.print(content);//写入的字符串
+        } catch (FileNotFoundException e) {
+            throw new Exception("写文件失败",e);
+        }finally {
+            if (stream != null){
+                stream.close();
+            }
+        }
+    }
+
+    /**
+     * 递归方式创建文件
+     * @throws Exception
+     */
+    public static void createFile(String filePathName)throws Exception{
+        //获取目录
+        String filePath = "";
+        int pos = -1;
+        pos = filePathName.lastIndexOf('/');
+        if (pos == -1){
+            pos = filePathName.lastIndexOf('\\');
+        }else{
+            int p = filePathName.lastIndexOf('\\'); //解决路径中即存在\\又存在/
+            pos = pos > p ? pos : p;
+        }
+        if (pos == -1){
+            throw new Exception("路径错误");
+        }
+        filePath = filePathName.substring(0,pos);
+        PathUtil.createPath(filePath);
+        File file = new File(filePathName);
+        if (!file.exists()){
+            file.createNewFile();
+        }
+    }
+
+
 }
